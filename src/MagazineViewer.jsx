@@ -5,18 +5,14 @@ import {
   ChevronRight,
   Maximize,
   Minimize,
-  Book,
-  Home,
   List,
   ZoomIn,
   ZoomOut,
   X,
-  Search,
-  Moon,
-  Sun,
   BookmarkPlus,
-  Menu,
   Bookmark,
+  Star,
+  Circle,
 } from "lucide-react";
 import {
   Dialog,
@@ -32,41 +28,31 @@ import {
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 const MagazineViewer = () => {
-  // State management
+  // State management with space theme defaults
   const [currentSpread, setCurrentSpread] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showThumbnails, setShowThumbnails] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [loadedImages, setLoadedImages] = useState(new Set());
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [bookmarks, setBookmarks] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [showMiniMap, setShowMiniMap] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [stars, setStars] = useState([]);
 
   const viewerRef = useRef(null);
-  const totalPages = 39;
+  const totalPages = 41;
 
   const pages = Array.from(
     { length: totalPages },
     (_, i) => `/Brahmand-APOGEE/${i + 1}.png`
   );
 
-  // Zoom handling functions
+  // Enhanced zoom handling with smooth transitions
   const handleZoomIn = useCallback(() => {
     setZoom((prev) => Math.min(prev + 0.1, 2));
   }, []);
@@ -75,19 +61,19 @@ const MagazineViewer = () => {
     setZoom((prev) => Math.max(prev - 0.1, 0.5));
   }, []);
 
-  // Core functionality
-  const getCurrentPages = () => {
+  // Core functionality remains the same
+  const getCurrentPages = useCallback(() => {
     if (currentSpread === 0) return [1];
     const leftPage = currentSpread * 2;
     const rightPage = leftPage + 1;
     return [leftPage, rightPage];
-  };
+  }, [currentSpread]);
 
   const currentPages = getCurrentPages();
   const isLastSpread = currentPages[currentPages.length - 1] >= totalPages;
   const progress = ((currentPages[0] - 1) / totalPages) * 100;
 
-  // Navigation functions
+  // Enhanced navigation with animations
   const goToSpread = useCallback((pageNumber) => {
     if (pageNumber === 1) {
       setCurrentSpread(0);
@@ -106,7 +92,7 @@ const MagazineViewer = () => {
     }
   }, []);
 
-  // Bookmark handling
+  // Bookmark handling with animations
   const addBookmark = useCallback((pageNumber) => {
     setBookmarks((prev) => {
       if (prev.includes(pageNumber)) return prev;
@@ -118,7 +104,7 @@ const MagazineViewer = () => {
     setBookmarks((prev) => prev.filter((p) => p !== pageNumber));
   }, []);
 
-  // Touch gesture handling
+  // Enhanced gesture handling
   const bind = useGesture(
     {
       onDrag: ({ direction: [dx], distance, cancel }) => {
@@ -146,17 +132,26 @@ const MagazineViewer = () => {
       },
     },
     {
-      drag: {
-        threshold: 10,
-        filterTaps: true,
-      },
-      pinch: {
-        threshold: 10,
-      },
+      drag: { threshold: 10, filterTaps: true },
+      pinch: { threshold: 10 },
     }
   );
 
-  // Image preloading
+  // Generate initial stars on component mount
+  useEffect(() => {
+    const generateStars = () => {
+      return Array.from({ length: 50 }, () => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.5 + 0.3,
+        animationDelay: `${Math.random() * 3}s`,
+      }));
+    };
+    setStars(generateStars());
+  }, []);
+
+  // Image preloading optimization
   useEffect(() => {
     const pagesToPreload = [];
     const range = 2;
@@ -177,9 +172,9 @@ const MagazineViewer = () => {
         };
       }
     });
-  }, [currentSpread, totalPages]);
+  }, [currentSpread, totalPages, pages]);
 
-  // Keyboard navigation
+  // Keyboard navigation enhancement
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === "ArrowRight" && !isLastSpread) {
@@ -188,7 +183,6 @@ const MagazineViewer = () => {
         setCurrentSpread((prev) => prev - 1);
       } else if (e.key === "Escape") {
         setShowThumbnails(false);
-        setIsSearchOpen(false);
         setShowBookmarks(false);
       }
     };
@@ -197,85 +191,67 @@ const MagazineViewer = () => {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [currentSpread, isLastSpread]);
 
-  // Theme handling
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
-  }, [isDarkMode]);
-
-  // Mini-map component
+  // Space-themed mini-map
+  // Enhanced MiniMap component with space theme
   const MiniMap = () => (
-    <div
-      className={cn(
-        "absolute bottom-20 right-4 w-32 h-48",
-        "bg-white dark:bg-gray-800 rounded-lg shadow-lg",
-        "border border-gray-200 dark:border-gray-700",
-        "overflow-hidden"
-      )}>
-      <div className="relative w-full h-full">
+    <div className="absolute bottom-20 right-4 w-32 h-48 rounded-lg overflow-hidden">
+      {/* Space-themed background with gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-indigo-900/30 to-purple-900/20 backdrop-blur-lg" />
+
+      {/* Animated stars background */}
+      {stars.slice(0, 20).map((star, i) => (
         <div
-          className="absolute w-full h-1 bg-blue-500"
+          key={i}
+          className="absolute animate-pulse"
           style={{
-            top: `${(currentPages[0] / totalPages) * 100}%`,
-          }}
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            opacity: star.opacity,
+            animationDelay: star.animationDelay,
+          }}>
+          <Star className="text-white" size={star.size} fill="white" />
+        </div>
+      ))}
+
+      <div className="relative w-full h-full border border-blue-500/20">
+        <div
+          className="absolute w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 shadow-lg shadow-blue-500/50 transition-all duration-300"
+          style={{ top: `${(currentPages[0] / totalPages) * 100}%` }}
         />
+
         {Array.from({ length: Math.ceil(totalPages / 2) }).map((_, i) => (
           <div
             key={i}
-            className="w-full h-2 border-b border-gray-200 dark:border-gray-700"
-            onClick={() => goToSpread(i * 2 + 1)}
-          />
+            className="w-full h-2 border-b border-blue-500/10 relative group cursor-pointer hover:bg-blue-500/10 transition-colors"
+            onClick={() => goToSpread(i * 2 + 1)}>
+            <Circle
+              className="absolute right-1 top-1/2 -translate-y-1/2 text-blue-400/30 group-hover:text-blue-400 transition-colors"
+              size={4}
+            />
+          </div>
         ))}
+
+        <div className="absolute -right-2 bottom-2 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-blue-500/30 shadow-lg shadow-blue-500/20" />
       </div>
     </div>
   );
 
-  // Search modal
-  const SearchDialog = () => (
-    <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Search Pages</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Enter page number..."
-            type="number"
-            min="1"
-            max={totalPages}
-          />
-          <Button
-            onClick={() => {
-              const page = parseInt(searchQuery);
-              if (page >= 1 && page <= totalPages) {
-                goToSpread(page);
-                setIsSearchOpen(false);
-              }
-            }}>
-            Go to Page
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-
-  // Bookmarks dialog
+  // Enhanced bookmarks dialog with space theme
   const BookmarksDialog = () => (
     <Dialog open={showBookmarks} onOpenChange={setShowBookmarks}>
-      <DialogContent>
+      <DialogContent className="bg-gray-900/95 border-blue-500/30 backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle>Bookmarks</DialogTitle>
+          <DialogTitle className="text-blue-400">Saved Bookmarks</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
           {bookmarks.length === 0 ? (
-            <p className="text-gray-500">No bookmarks yet</p>
+            <p className="text-gray-400">No bookmarks yet</p>
           ) : (
             bookmarks.map((pageNum) => (
               <div
                 key={pageNum}
-                className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
-                <span>Page {pageNum}</span>
+                className="flex items-center justify-between p-2 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg border border-blue-500/20 transition-colors">
+                <span className="text-blue-300">Page {pageNum}</span>
                 <div className="space-x-2">
                   <Button
                     variant="ghost"
@@ -283,13 +259,15 @@ const MagazineViewer = () => {
                     onClick={() => {
                       goToSpread(pageNum);
                       setShowBookmarks(false);
-                    }}>
+                    }}
+                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                     Go to page
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeBookmark(pageNum)}>
+                    onClick={() => removeBookmark(pageNum)}
+                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
                     Remove
                   </Button>
                 </div>
@@ -301,7 +279,7 @@ const MagazineViewer = () => {
     </Dialog>
   );
 
-  // Error handling toast
+  // Error handling with space theme
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(""), 3000);
@@ -310,36 +288,40 @@ const MagazineViewer = () => {
   }, [errorMessage]);
 
   return (
-    <div
-      className={cn(
-        "h-screen w-screen flex flex-col",
-        isDarkMode ? "bg-gray-950" : "bg-gray-50"
-      )}>
-      {/* Navigation Bar */}
-      <div
-        className={cn(
-          "flex justify-between items-center px-6 py-3 border-b shadow-lg backdrop-blur-lg",
-          isDarkMode
-            ? "bg-gray-900/90 border-gray-800"
-            : "bg-white/90 border-gray-200"
-        )}>
-        {/* Left section */}
+    <div className="h-screen w-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-950 transition-colors duration-500 relative">
+      {/* Animated stars background */}
+      {stars.map((star, i) => (
+        <div
+          key={i}
+          className="absolute animate-pulse"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            opacity: star.opacity,
+            animationDelay: star.animationDelay,
+            zIndex: 0,
+          }}>
+          <Star className="text-white" size={star.size} fill="white" />
+        </div>
+      ))}
+      {/* Enhanced Navigation Bar with space theme */}
+      <div className="flex justify-between items-center px-6 py-3 border-b border-blue-500/20 bg-gray-900/90 backdrop-blur-xl transition-all duration-300 relative z-10">
+        {/* Left section with enhanced space theme */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 group">
-            <img
-              src="/logo.png"
-              alt="Club Logo"
-              className="w-10 h-10 rounded-full transition-transform group-hover:scale-110"
-            />
+            <div className="relative">
+              <img
+                src="/logo.png"
+                alt="Club Logo"
+                className="w-10 h-10 rounded-full transition-transform group-hover:scale-110 ring-2 ring-blue-500/30"
+              />
+              <div className="absolute -inset-1 bg-blue-500/20 rounded-full blur-md group-hover:bg-blue-500/30 transition-colors" />
+            </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 Apogee
               </span>
-              <span
-                className={cn(
-                  "text-xs",
-                  isDarkMode ? "text-gray-400" : "text-gray-600"
-                )}>
+              <span className="text-xs text-blue-300/70">
                 Space Club NIT Jalandhar
               </span>
             </div>
@@ -352,24 +334,8 @@ const MagazineViewer = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setIsSearchOpen(true)}
-                    className="gap-2">
-                    <Search className="w-4 h-4" />
-                    <span>Search</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Search Pages</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
                     onClick={() => setShowBookmarks(true)}
-                    className="gap-2">
+                    className="gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                     <Bookmark className="w-4 h-4" />
                     <span>Bookmarks</span>
                   </Button>
@@ -385,7 +351,7 @@ const MagazineViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowThumbnails(!showThumbnails)}
-                    className="gap-2">
+                    className="gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                     <List className="w-4 h-4" />
                     <span>{showThumbnails ? "Hide Pages" : "Show Pages"}</span>
                   </Button>
@@ -396,9 +362,13 @@ const MagazineViewer = () => {
           </div>
         </div>
 
-        {/* Right section */}
+        {/* Right section with space theme */}
         <div className="flex items-center gap-4">
-          <Progress value={progress} className="w-32" />
+          <Progress
+            value={progress}
+            className="w-32 bg-blue-950 border border-blue-500/20 overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 animate-pulse" />
+          </Progress>
 
           <div className="flex items-center gap-2">
             <TooltipProvider>
@@ -409,7 +379,7 @@ const MagazineViewer = () => {
                     size="icon"
                     disabled={currentSpread === 0}
                     onClick={() => setCurrentSpread((prev) => prev - 1)}
-                    className="transition-all hover:scale-105">
+                    className="transition-all hover:scale-105 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 disabled:opacity-50">
                     <ChevronLeft className="w-5 h-5" />
                   </Button>
                 </TooltipTrigger>
@@ -417,11 +387,7 @@ const MagazineViewer = () => {
               </Tooltip>
             </TooltipProvider>
 
-            <span
-              className={cn(
-                "px-4 font-medium",
-                isDarkMode ? "text-white" : "text-gray-900"
-              )}>
+            <span className="px-4 font-medium text-blue-300">
               {currentPages.length === 1
                 ? `Page ${currentPages[0]}`
                 : `Pages ${currentPages[0]}-${currentPages[1]}`}{" "}
@@ -436,7 +402,7 @@ const MagazineViewer = () => {
                     size="icon"
                     disabled={isLastSpread}
                     onClick={() => setCurrentSpread((prev) => prev + 1)}
-                    className="transition-all hover:scale-105">
+                    className="transition-all hover:scale-105 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 disabled:opacity-50">
                     <ChevronRight className="w-5 h-5" />
                   </Button>
                 </TooltipTrigger>
@@ -453,7 +419,8 @@ const MagazineViewer = () => {
                     variant="ghost"
                     size="icon"
                     onClick={handleZoomOut}
-                    disabled={zoom <= 0.5}>
+                    disabled={zoom <= 0.5}
+                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                     <ZoomOut className="w-5 h-5" />
                   </Button>
                 </TooltipTrigger>
@@ -461,7 +428,9 @@ const MagazineViewer = () => {
               </Tooltip>
             </TooltipProvider>
 
-            <span className="w-16 text-center">{Math.round(zoom * 100)}%</span>
+            <span className="w-16 text-center text-blue-300">
+              {Math.round(zoom * 100)}%
+            </span>
 
             <TooltipProvider>
               <Tooltip>
@@ -470,7 +439,8 @@ const MagazineViewer = () => {
                     variant="ghost"
                     size="icon"
                     onClick={handleZoomIn}
-                    disabled={zoom >= 2}>
+                    disabled={zoom >= 2}
+                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                     <ZoomIn className="w-5 h-5" />
                   </Button>
                 </TooltipTrigger>
@@ -478,29 +448,14 @@ const MagazineViewer = () => {
               </Tooltip>
             </TooltipProvider>
           </div>
-
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setIsDarkMode(!isDarkMode)}>
-                  {isDarkMode ? (
-                    <Sun className="w-5 h-5" />
-                  ) : (
-                    <Moon className="w-5 h-5" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Toggle Theme</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={toggleFullscreen}>
+                  onClick={toggleFullscreen}
+                  className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                   {isFullscreen ? (
                     <Minimize className="w-5 h-5" />
                   ) : (
@@ -516,39 +471,33 @@ const MagazineViewer = () => {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content Area with Space Theme */}
       <div
         className="flex-1 flex overflow-hidden relative"
         {...bind()}
         ref={viewerRef}>
-        {/* Enhanced Thumbnails Sidebar */}
+        {/* Enhanced Thumbnails Sidebar with Space Theme */}
         {showThumbnails && (
           <>
             <div
               className={cn(
-                "absolute inset-y-0 left-0 w-64 border-r z-50 overflow-hidden",
+                "absolute inset-y-0 left-0 w-64 z-50 overflow-hidden",
                 "transform transition-transform duration-300 ease-in-out",
-                isDarkMode
-                  ? "bg-gray-900/95 border-gray-800"
-                  : "bg-white/95 border-gray-200"
+                "bg-gray-900/95 border-r border-blue-500/20",
+                "backdrop-blur-xl"
               )}>
-              <div className="p-4 border-b flex justify-between items-center">
-                <h3
-                  className={cn(
-                    "font-medium",
-                    isDarkMode ? "text-white" : "text-gray-900"
-                  )}>
-                  Page Navigation
-                </h3>
+              <div className="p-4 border-b border-blue-500/20 flex justify-between items-center">
+                <h3 className="font-medium text-blue-400">Page Navigation</h3>
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setShowThumbnails(false)}>
+                  onClick={() => setShowThumbnails(false)}
+                  className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                   <X className="w-4 h-4" />
                 </Button>
               </div>
 
-              <div className="flex-1 p-4 h-[100%] space-y-4 overflow-y-scroll">
+              <div className="flex-1 p-4 h-[100%] space-y-4 overflow-y-scroll custom-scrollbar">
                 <div className="grid grid-cols-2 gap-4">
                   {pages.map((page, index) => (
                     <button
@@ -558,15 +507,15 @@ const MagazineViewer = () => {
                         setShowThumbnails(false);
                       }}
                       className={cn(
-                        "relative aspect-[210/297] rounded-lg overflow-hidden ",
-                        "transition-all duration-200 hover:scale-105 focus:outline-none",
-                        "group",
+                        "relative aspect-[210/297] rounded-lg overflow-hidden",
+                        "transition-all duration-300 hover:scale-105 focus:outline-none",
+                        "group border border-blue-500/20",
                         currentPages.includes(index + 1)
-                          ? "ring-2 ring-blue-500 shadow-lg"
+                          ? "ring-2 ring-blue-500 shadow-lg shadow-blue-500/20"
                           : "hover:ring-2 hover:ring-blue-400/50"
                       )}>
                       {!loadedImages.has(index + 1) && (
-                        <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-800 " />
+                        <div className="absolute inset-0 animate-pulse bg-gray-800" />
                       )}
                       <img
                         src={page}
@@ -577,18 +526,18 @@ const MagazineViewer = () => {
                       <div
                         className={cn(
                           "absolute inset-0 flex items-center justify-center",
-                          "bg-black/60 transition-opacity duration-200",
+                          "bg-gray-900/80 transition-opacity duration-300",
                           "opacity-0 group-hover:opacity-100",
                           currentPages.includes(index + 1)
-                            ? "!opacity-100 bg-blue-500/60"
+                            ? "!opacity-100 bg-blue-900/60"
                             : ""
                         )}>
                         <div className="flex flex-col items-center gap-2">
-                          <span className="text-white text-sm font-medium">
+                          <span className="text-blue-300 text-sm font-medium">
                             Page {index + 1}
                           </span>
                           {bookmarks.includes(index + 1) && (
-                            <Badge variant="secondary">
+                            <Badge className="bg-blue-500/20 text-blue-300">
                               <Bookmark className="w-3 h-3 mr-1" />
                               Bookmarked
                             </Badge>
@@ -601,35 +550,29 @@ const MagazineViewer = () => {
               </div>
             </div>
             <div
-              className="absolute inset-0 bg-black/20 backdrop-blur-sm z-40"
+              className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm z-40"
               onClick={() => setShowThumbnails(false)}
             />
           </>
         )}
 
-        {/* Magazine Display */}
-        <div className="flex-1 overflow-auto">
+        {/* Magazine Display with enhanced space theme */}
+        <div className="flex-1 overflow-auto custom-scrollbar">
           <div className="min-h-full flex justify-center items-center p-8">
             <div
-              className="flex transform-gpu transition-transform duration-200"
+              className="flex transform-gpu transition-all duration-300"
               style={{ transform: `scale(${zoom})` }}>
               {currentPages.map((pageNum) => (
                 <div key={pageNum} className="relative group">
                   {!loadedImages.has(pageNum) && (
-                    <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-800" />
+                    <div className="absolute inset-0 animate-pulse bg-gray-800" />
                   )}
                   <img
                     src={pages[pageNum - 1]}
                     alt={`Page ${pageNum}`}
-                    className={cn(
-                      "h-[80vh] w-auto object-contain",
-                      "transition-all duration-300",
-                      " group-hover:shadow-2xl",
-                      isDarkMode
-                        ? "group-hover:shadow-blue-400/20"
-                        : "group-hover:shadow-blue-600/20"
-                    )}
+                    className="h-[80vh] w-auto object-contain rounded-lg border border-blue-500/20 shadow-xl shadow-blue-500/5 group-hover:shadow-2xl group-hover:shadow-blue-500/10 transition-all duration-300"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <button
                     onClick={() => {
                       if (bookmarks.includes(pageNum)) {
@@ -641,10 +584,11 @@ const MagazineViewer = () => {
                     className={cn(
                       "absolute top-4 right-4 p-2 rounded-full",
                       "opacity-0 group-hover:opacity-100",
-                      "transition-opacity duration-200",
+                      "transition-all duration-300",
+                      "backdrop-blur-xl",
                       bookmarks.includes(pageNum)
-                        ? "bg-blue-500 text-white"
-                        : "bg-white/90 dark:bg-gray-800/90"
+                        ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
+                        : "bg-gray-900/90 text-blue-400 hover:text-blue-300"
                     )}>
                     <BookmarkPlus className="w-5 h-5" />
                   </button>
@@ -654,25 +598,18 @@ const MagazineViewer = () => {
           </div>
         </div>
 
-        {/* Mini-map Navigation */}
+        {/* Enhanced MiniMap */}
         {showMiniMap && <MiniMap />}
 
         {/* Enhanced Footer */}
-        <div
-          className={cn(
-            "absolute bottom-0 left-0 right-0",
-            "py-4 px-8 flex justify-between items-center",
-            isDarkMode
-              ? "bg-gradient-to-t from-gray-950 via-gray-950/90 to-transparent"
-              : "bg-gradient-to-t from-white via-white/90 to-transparent"
-          )}>
-          <span className="font-medium text-blue-500">By Team APOGEE</span>
+        <div className="absolute bottom-0 left-0 right-0 py-4 px-8 flex justify-between items-center bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent">
+          <span className="font-medium text-white">Team APOGEE 🚀</span>
           <div className="flex gap-8">
-            <span className="hover:text-blue-500 transition-colors cursor-pointer">
-              Crafted by Janvi and Chahat
+            <span className="text-white hover:text-blue-300 transition-colors cursor-pointer">
+              Crafted By Janvi and Chahat
             </span>
-            <span className="text-blue-500/50">●</span>
-            <span className="hover:text-blue-500 transition-colors cursor-pointer">
+            <span className="text-white/80">●</span>
+            <span className="text-white hover:text-blue-300 transition-colors cursor-pointer">
               Editor - Samridhi
             </span>
           </div>
@@ -680,15 +617,16 @@ const MagazineViewer = () => {
       </div>
 
       {/* Modals */}
-      <SearchDialog />
       <BookmarksDialog />
 
-      {/* Error Toast */}
+      {/* Error Toast with Space Theme */}
       {errorMessage && (
         <div
           className={cn(
-            "fixed bottom-4 right-4 p-4 rounded-lg shadow-lg",
-            "bg-red-500 text-white",
+            "fixed bottom-4 right-4 p-4 rounded-lg",
+            "bg-red-500/90 text-white backdrop-blur-xl",
+            "border border-red-400/30",
+            "shadow-lg shadow-red-500/20",
             "animate-in slide-in-from-bottom-5"
           )}>
           {errorMessage}
