@@ -13,6 +13,8 @@ import {
   Bookmark,
   Star,
   Circle,
+  Moon,
+  Sun,
 } from "lucide-react";
 import {
   Dialog,
@@ -219,6 +221,99 @@ const MagazineViewer = () => {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [currentSpread, isLastSpread]);
 
+  // background - space theme
+  const SpaceBackground = () => {
+    // Stars configuration
+    const [stars, setStars] = useState([]);
+    const [shootingStars, setShootingStars] = useState([]);
+
+    useEffect(() => {
+      // Generate random stars
+      const generateStars = () => {
+        return Array.from({ length: 100 }, () => ({
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.7 + 0.3,
+          animationDelay: `${Math.random() * 5}s`,
+          twinkleSpeed: `${Math.random() * 3 + 2}s`,
+        }));
+      };
+
+      // Generate shooting stars
+      const generateShootingStars = () => {
+        return Array.from({ length: 5 }, () => ({
+          x: Math.random() * 100,
+          y: Math.random() * 50,
+          duration: Math.random() * 2 + 1,
+          delay: Math.random() * 10,
+        }));
+      };
+
+      setStars(generateStars());
+      setShootingStars(generateShootingStars());
+
+      // Regenerate shooting stars periodically
+      const interval = setInterval(() => {
+        setShootingStars(generateShootingStars());
+      }, 10000);
+
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-blue-950/20 to-purple-950/30" />
+
+        {/* Animated stars */}
+        {stars.map((star, i) => (
+          <div
+            key={i}
+            className="absolute animate-twinkle"
+            style={{
+              left: `${star.x}%`,
+              top: `${star.y}%`,
+              animationDuration: star.twinkleSpeed,
+              animationDelay: star.animationDelay,
+            }}>
+            <Star
+              className="text-white transform-gpu"
+              size={star.size}
+              fill="white"
+              style={{ opacity: star.opacity }}
+            />
+          </div>
+        ))}
+
+        {/* Shooting stars */}
+        {shootingStars.map((star, i) => (
+          <div
+            key={i}
+            className="absolute h-px w-12 bg-gradient-to-r from-transparent via-white to-transparent animate-shooting-star"
+            style={{
+              left: `${star.x}%`,
+              top: `${star.y}%`,
+              animationDuration: `${star.duration}s`,
+              animationDelay: `${star.delay}s`,
+            }}
+          />
+        ))}
+
+        {/* Nebula effects */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-transparent to-blue-500/5 animate-nebula" />
+
+        {/* Cosmic objects */}
+        <div className="absolute right-10 top-20 animate-float">
+          <Sun className="text-gray-400/20" size={80} />
+        </div>
+        <div className="absolute left-20 bottom-20 animate-float-slow">
+          <Moon className="text-gray-400/20" size={60} />
+        </div>
+      </div>
+    );
+  };
+
   // Space-themed mini-map
   const MiniMap = () => (
     <div className="absolute bottom-20 right-4 w-32 h-48 rounded-lg overflow-hidden">
@@ -314,6 +409,7 @@ const MagazineViewer = () => {
 
   return (
     <div className="h-screen w-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-950 transition-colors duration-500 relative">
+      <SpaceBackground />
       {/* Animated stars background */}
       {stars.map((star, i) => (
         <div
@@ -630,7 +726,7 @@ const MagazineViewer = () => {
         {showMiniMap && <MiniMap />}
 
         {/* Enhanced Footer */}
-        <div className="absolute bottom-0 left-0 right-0 py-2 md:py-4 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 py-2 md:py-4 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center">
           <span className="font-medium text-white text-sm md:text-base mb-1 md:mb-0">
             Team APOGEE 🚀
           </span>
