@@ -43,6 +43,7 @@ const MagazineViewer = () => {
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [stars, setStars] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const viewerRef = useRef(null);
   const totalPages = 41;
@@ -51,6 +52,17 @@ const MagazineViewer = () => {
     { length: totalPages },
     (_, i) => `/Brahmand-APOGEE/${i + 1}.png`
   );
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Enhanced zoom handling with smooth transitions
   const handleZoomIn = useCallback(() => {
@@ -61,26 +73,38 @@ const MagazineViewer = () => {
     setZoom((prev) => Math.max(prev - 0.1, 0.5));
   }, []);
 
-  // Core functionality remains the same
+  // Modified getCurrentPages to handle mobile view
   const getCurrentPages = useCallback(() => {
+    if (isMobile) {
+      return [currentSpread + 1];
+    }
     if (currentSpread === 0) return [1];
     const leftPage = currentSpread * 2;
     const rightPage = leftPage + 1;
     return [leftPage, rightPage];
-  }, [currentSpread]);
+  }, [currentSpread, isMobile]);
 
   const currentPages = getCurrentPages();
-  const isLastSpread = currentPages[currentPages.length - 1] >= totalPages;
+  const isLastSpread = isMobile
+    ? currentPages[0] >= totalPages
+    : currentPages[currentPages.length - 1] >= totalPages;
   const progress = ((currentPages[0] - 1) / totalPages) * 100;
 
   // Enhanced navigation with animations
-  const goToSpread = useCallback((pageNumber) => {
-    if (pageNumber === 1) {
-      setCurrentSpread(0);
-    } else {
-      setCurrentSpread(Math.floor((pageNumber - 1) / 2));
-    }
-  }, []);
+  const goToSpread = useCallback(
+    (pageNumber) => {
+      if (isMobile) {
+        setCurrentSpread(pageNumber - 1);
+      } else {
+        if (pageNumber === 1) {
+          setCurrentSpread(0);
+        } else {
+          setCurrentSpread(Math.floor((pageNumber - 1) / 2));
+        }
+      }
+    },
+    [isMobile]
+  );
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -159,7 +183,11 @@ const MagazineViewer = () => {
     for (let i = -range; i <= range; i++) {
       const spreadToLoad = currentSpread + i;
       if (spreadToLoad >= 0 && spreadToLoad * 2 <= totalPages) {
-        pagesToPreload.push(spreadToLoad * 2, spreadToLoad * 2 + 1);
+        if (isMobile) {
+          pagesToPreload.push(spreadToLoad + 1);
+        } else {
+          pagesToPreload.push(spreadToLoad * 2, spreadToLoad * 2 + 1);
+        }
       }
     }
 
@@ -172,7 +200,7 @@ const MagazineViewer = () => {
         };
       }
     });
-  }, [currentSpread, totalPages, pages]);
+  }, [currentSpread, totalPages, pages, isMobile]);
 
   // Keyboard navigation enhancement
   useEffect(() => {
@@ -192,13 +220,10 @@ const MagazineViewer = () => {
   }, [currentSpread, isLastSpread]);
 
   // Space-themed mini-map
-  // Enhanced MiniMap component with space theme
   const MiniMap = () => (
     <div className="absolute bottom-20 right-4 w-32 h-48 rounded-lg overflow-hidden">
-      {/* Space-themed background with gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-indigo-900/30 to-purple-900/20 backdrop-blur-lg" />
 
-      {/* Animated stars background */}
       {stars.slice(0, 20).map((star, i) => (
         <div
           key={i}
@@ -305,29 +330,29 @@ const MagazineViewer = () => {
         </div>
       ))}
       {/* Enhanced Navigation Bar with space theme */}
-      <div className="flex justify-between items-center px-6 py-3 border-b border-blue-500/20 bg-gray-900/90 backdrop-blur-xl transition-all duration-300 relative z-10">
+      <div className="flex flex-col md:flex-row justify-between items-center px-3 md:px-6 py-3 border-b border-blue-500/20 bg-gray-900/90 backdrop-blur-xl transition-all duration-300 relative z-10">
         {/* Left section with enhanced space theme */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 mb-3 md:mb-0">
           <div className="flex items-center gap-3 group">
             <div className="relative">
               <img
                 src="/logo.png"
                 alt="Club Logo"
-                className="w-10 h-10 rounded-full transition-transform group-hover:scale-110 ring-2 ring-blue-500/30"
+                className="w-8 md:w-10 h-8 md:h-10 rounded-full transition-transform group-hover:scale-110 ring-2 ring-blue-500/30"
               />
               <div className="absolute -inset-1 bg-blue-500/20 rounded-full blur-md group-hover:bg-blue-500/30 transition-colors" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              <span className="font-bold text-base md:text-lg bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 Apogee
               </span>
-              <span className="text-xs text-blue-300/70">
+              <span className="text-xs text-blue-300/70 hidden md:inline">
                 Space Club NIT Jalandhar
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -335,9 +360,9 @@ const MagazineViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowBookmarks(true)}
-                    className="gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
+                    className="gap-1 md:gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                     <Bookmark className="w-4 h-4" />
-                    <span>Bookmarks</span>
+                    <span className="hidden md:inline">Bookmarks</span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>View Bookmarks</TooltipContent>
@@ -351,9 +376,11 @@ const MagazineViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowThumbnails(!showThumbnails)}
-                    className="gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
+                    className="gap-1 md:gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
                     <List className="w-4 h-4" />
-                    <span>{showThumbnails ? "Hide Pages" : "Show Pages"}</span>
+                    <span className="hidden md:inline">
+                      {showThumbnails ? "Hide Pages" : "Show Pages"}
+                    </span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Toggle Thumbnail View</TooltipContent>
@@ -363,10 +390,10 @@ const MagazineViewer = () => {
         </div>
 
         {/* Right section with space theme */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
           <Progress
             value={progress}
-            className="w-32 bg-blue-950 border border-blue-500/20 overflow-hidden relative">
+            className="w-24 md:w-32 bg-blue-950 border border-blue-500/20 overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 animate-pulse" />
           </Progress>
 
@@ -387,7 +414,7 @@ const MagazineViewer = () => {
               </Tooltip>
             </TooltipProvider>
 
-            <span className="px-4 font-medium text-blue-300">
+            <span className="px-2 md:px-4 font-medium text-blue-300 text-sm md:text-base">
               {currentPages.length === 1
                 ? `Page ${currentPages[0]}`
                 : `Pages ${currentPages[0]}-${currentPages[1]}`}{" "}
@@ -428,7 +455,7 @@ const MagazineViewer = () => {
               </Tooltip>
             </TooltipProvider>
 
-            <span className="w-16 text-center text-blue-300">
+            <span className="w-12 md:w-16 text-center text-blue-300 text-sm md:text-base">
               {Math.round(zoom * 100)}%
             </span>
 
@@ -448,6 +475,7 @@ const MagazineViewer = () => {
               </Tooltip>
             </TooltipProvider>
           </div>
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -481,7 +509,7 @@ const MagazineViewer = () => {
           <>
             <div
               className={cn(
-                "absolute inset-y-0 left-0 w-64 z-50 overflow-hidden",
+                "absolute inset-y-0 left-0 w-full md:w-64 z-50 overflow-hidden",
                 "transform transition-transform duration-300 ease-in-out",
                 "bg-gray-900/95 border-r border-blue-500/20",
                 "backdrop-blur-xl"
@@ -497,7 +525,7 @@ const MagazineViewer = () => {
                 </Button>
               </div>
 
-              <div className="flex-1 p-4 h-[100%] space-y-4 overflow-y-scroll custom-scrollbar">
+              <div className="flex-1 p-4 h-[calc(100%-4rem)] space-y-4 overflow-y-scroll custom-scrollbar">
                 <div className="grid grid-cols-2 gap-4">
                   {pages.map((page, index) => (
                     <button
@@ -558,7 +586,7 @@ const MagazineViewer = () => {
 
         {/* Magazine Display with enhanced space theme */}
         <div className="flex-1 overflow-auto custom-scrollbar">
-          <div className="min-h-full flex justify-center items-center p-8">
+          <div className="min-h-full flex justify-center items-center p-4 md:p-8">
             <div
               className="flex transform-gpu transition-all duration-300"
               style={{ transform: `scale(${zoom})` }}>
@@ -570,7 +598,7 @@ const MagazineViewer = () => {
                   <img
                     src={pages[pageNum - 1]}
                     alt={`Page ${pageNum}`}
-                    className="h-[80vh] w-auto object-contain rounded-lg border border-blue-500/20 shadow-xl shadow-blue-500/5 group-hover:shadow-2xl group-hover:shadow-blue-500/10 transition-all duration-300"
+                    className="h-[50vh] md:h-[80vh] w-auto object-contain rounded-lg border border-blue-500/20 shadow-xl shadow-blue-500/5 group-hover:shadow-2xl group-hover:shadow-blue-500/10 transition-all duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <button
@@ -602,13 +630,15 @@ const MagazineViewer = () => {
         {showMiniMap && <MiniMap />}
 
         {/* Enhanced Footer */}
-        <div className="absolute bottom-0 left-0 right-0 py-4 px-8 flex justify-between items-center bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent">
-          <span className="font-medium text-white">Team APOGEE 🚀</span>
-          <div className="flex gap-8">
+        <div className="absolute bottom-0 left-0 right-0 py-2 md:py-4 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent">
+          <span className="font-medium text-white text-sm md:text-base mb-1 md:mb-0">
+            Team APOGEE 🚀
+          </span>
+          <div className="flex flex-col md:flex-row md:gap-8 items-center text-sm md:text-base">
             <span className="text-white hover:text-blue-300 transition-colors cursor-pointer">
               Crafted By Janvi and Chahat
             </span>
-            <span className="text-white/80">●</span>
+            <span className="text-white/80 hidden md:inline">●</span>
             <span className="text-white hover:text-blue-300 transition-colors cursor-pointer">
               Editor - Samridhi
             </span>
