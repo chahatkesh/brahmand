@@ -9,8 +9,7 @@ import {
   ZoomIn,
   ZoomOut,
   X,
-  BookmarkPlus,
-  Bookmark,
+  Home,
   Star,
   Circle,
   Moon,
@@ -40,9 +39,7 @@ const MagazineViewer = () => {
   const [showThumbnails, setShowThumbnails] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [loadedImages, setLoadedImages] = useState(new Set());
-  const [bookmarks, setBookmarks] = useState([]);
   const [showMiniMap, setShowMiniMap] = useState(false);
-  const [showBookmarks, setShowBookmarks] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [stars, setStars] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
@@ -116,18 +113,6 @@ const MagazineViewer = () => {
       document.exitFullscreen();
       setIsFullscreen(false);
     }
-  }, []);
-
-  // Bookmark handling with animations
-  const addBookmark = useCallback((pageNumber) => {
-    setBookmarks((prev) => {
-      if (prev.includes(pageNumber)) return prev;
-      return [...prev, pageNumber].sort((a, b) => a - b);
-    });
-  }, []);
-
-  const removeBookmark = useCallback((pageNumber) => {
-    setBookmarks((prev) => prev.filter((p) => p !== pageNumber));
   }, []);
 
   // Enhanced gesture handling
@@ -213,7 +198,6 @@ const MagazineViewer = () => {
         setCurrentSpread((prev) => prev - 1);
       } else if (e.key === "Escape") {
         setShowThumbnails(false);
-        setShowBookmarks(false);
       }
     };
 
@@ -356,49 +340,6 @@ const MagazineViewer = () => {
     </div>
   );
 
-  // Enhanced bookmarks dialog with space theme
-  const BookmarksDialog = () => (
-    <Dialog open={showBookmarks} onOpenChange={setShowBookmarks}>
-      <DialogContent className="bg-gray-900/95 border-blue-500/30 backdrop-blur-xl">
-        <DialogHeader>
-          <DialogTitle className="text-blue-400">Saved Bookmarks</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-2">
-          {bookmarks.length === 0 ? (
-            <p className="text-gray-400">No bookmarks yet</p>
-          ) : (
-            bookmarks.map((pageNum) => (
-              <div
-                key={pageNum}
-                className="flex items-center justify-between p-2 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg border border-blue-500/20 transition-colors">
-                <span className="text-blue-300">Page {pageNum}</span>
-                <div className="space-x-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      goToSpread(pageNum);
-                      setShowBookmarks(false);
-                    }}
-                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
-                    Go to page
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeBookmark(pageNum)}
-                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
-                    Remove
-                  </Button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-
   // Error handling with space theme
   useEffect(() => {
     if (errorMessage) {
@@ -408,7 +349,7 @@ const MagazineViewer = () => {
   }, [errorMessage]);
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-950 transition-colors duration-500 relative">
+    <div className="h-[100dvh] w-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-950 transition-colors duration-500 relative">
       <SpaceBackground />
       {/* Animated stars background */}
       {stars.map((star, i) => (
@@ -426,172 +367,122 @@ const MagazineViewer = () => {
         </div>
       ))}
       {/* Enhanced Navigation Bar with space theme */}
-      <div className="flex flex-col md:flex-row justify-between items-center px-3 md:px-6 py-3 border-b border-blue-500/20 bg-gray-900/90 backdrop-blur-xl transition-all duration-300 relative z-10">
-        {/* Left section with enhanced space theme */}
-        <div className="flex items-center gap-6 mb-3 md:mb-0">
+      <div className="flex flex-col md:flex-row justify-between items-stretch px-3 md:px-6 py-2 md:py-3 border-b border-blue-500/20 bg-gray-900/90 backdrop-blur-xl transition-all duration-300 relative z-10">
+        {/* Top row for mobile - Logo and basic controls */}
+        <div className="flex justify-between items-center mb-2 md:mb-0">
           <div className="flex items-center gap-3 group">
             <div className="relative">
               <img
                 src="/logo.png"
                 alt="Club Logo"
-                className="w-8 md:w-10 h-8 md:h-10 rounded-full transition-transform group-hover:scale-110 ring-2 ring-blue-500/30"
+                className="w-8 h-8 rounded-full transition-transform group-hover:scale-110 ring-2 ring-blue-500/30"
               />
               <div className="absolute -inset-1 bg-blue-500/20 rounded-full blur-md group-hover:bg-blue-500/30 transition-colors" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-base md:text-lg bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              <span className="font-bold text-base bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 Apogee
               </span>
-              <span className="text-xs text-blue-300/70 hidden md:inline">
+              <span className="text-[10px] text-blue-300/70">
                 Space Club NIT Jalandhar
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-4">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowBookmarks(true)}
-                    className="gap-1 md:gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
-                    <Bookmark className="w-4 h-4" />
-                    <span className="hidden md:inline">Bookmarks</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>View Bookmarks</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowThumbnails(!showThumbnails)}
-                    className="gap-1 md:gap-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
-                    <List className="w-4 h-4" />
-                    <span className="hidden md:inline">
-                      {showThumbnails ? "Hide Pages" : "Show Pages"}
-                    </span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Toggle Thumbnail View</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          {/* Mobile-only controls */}
+          <div className="flex items-center gap-2 md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleFullscreen}
+              className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 p-1">
+              {isFullscreen ? (
+                <Minimize className="w-4 h-4" />
+              ) : (
+                <Maximize className="w-4 h-4" />
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowThumbnails(!showThumbnails)}
+              className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 p-1">
+              <List className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 
-        {/* Right section with space theme */}
-        <div className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
-          <Progress
-            value={progress}
-            className="w-24 md:w-32 bg-blue-950 border border-blue-500/20 overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 animate-pulse" />
-          </Progress>
-
+        {/* Bottom row for mobile - Navigation controls */}
+        <div className="flex items-center justify-between md:justify-end gap-2 md:gap-4">
+          {/* Left side controls */}
           <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={currentSpread === 0}
-                    onClick={() => setCurrentSpread((prev) => prev - 1)}
-                    className="transition-all hover:scale-105 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 disabled:opacity-50">
-                    <ChevronLeft className="w-5 h-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Previous Page</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => goToSpread(1)}
+              className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
+              <Home className="w-4 h-4" />
+            </Button>
 
-            <span className="px-2 md:px-4 font-medium text-blue-300 text-sm md:text-base">
+            <Progress
+              value={progress}
+              className="w-16 md:w-32 bg-blue-950 border border-blue-500/20 overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 animate-pulse" />
+            </Progress>
+          </div>
+
+          {/* Page navigation */}
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={currentSpread === 0}
+              onClick={() => setCurrentSpread((prev) => prev - 1)}
+              className="h-8 w-8 transition-all hover:scale-105 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 disabled:opacity-50">
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+
+            <span className="px-2 font-medium text-blue-300 text-sm min-w-[80px] text-center">
               {currentPages.length === 1
-                ? `Page ${currentPages[0]}`
-                : `Pages ${currentPages[0]}-${currentPages[1]}`}{" "}
+                ? `${currentPages[0]}`
+                : `${currentPages[0]}-${currentPages[1]}`}{" "}
               / {totalPages}
             </span>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={isLastSpread}
-                    onClick={() => setCurrentSpread((prev) => prev + 1)}
-                    className="transition-all hover:scale-105 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 disabled:opacity-50">
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Next Page</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={isLastSpread}
+              onClick={() => setCurrentSpread((prev) => prev + 1)}
+              className="h-8 w-8 transition-all hover:scale-105 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 disabled:opacity-50">
+              <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleZoomOut}
-                    disabled={zoom <= 0.5}
-                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
-                    <ZoomOut className="w-5 h-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Zoom Out</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          {/* Zoom controls - Hidden on mobile */}
+          <div className="hidden md:flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleZoomOut}
+              disabled={zoom <= 0.5}
+              className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
+              <ZoomOut className="w-4 h-4" />
+            </Button>
 
-            <span className="w-12 md:w-16 text-center text-blue-300 text-sm md:text-base">
+            <span className="w-12 text-center text-blue-300 text-sm">
               {Math.round(zoom * 100)}%
             </span>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleZoomIn}
-                    disabled={zoom >= 2}
-                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
-                    <ZoomIn className="w-5 h-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Zoom In</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleZoomIn}
+              disabled={zoom >= 2}
+              className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
+              <ZoomIn className="w-4 h-4" />
+            </Button>
           </div>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleFullscreen}
-                  className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
-                  {isFullscreen ? (
-                    <Minimize className="w-5 h-5" />
-                  ) : (
-                    <Maximize className="w-5 h-5" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
         </div>
       </div>
 
@@ -660,12 +551,6 @@ const MagazineViewer = () => {
                           <span className="text-blue-300 text-sm font-medium">
                             Page {index + 1}
                           </span>
-                          {bookmarks.includes(index + 1) && (
-                            <Badge className="bg-blue-500/20 text-blue-300">
-                              <Bookmark className="w-3 h-3 mr-1" />
-                              Bookmarked
-                            </Badge>
-                          )}
                         </div>
                       </div>
                     </button>
@@ -697,25 +582,6 @@ const MagazineViewer = () => {
                     className="h-[50vh] md:h-[80vh] w-auto object-contain rounded-lg border border-blue-500/20 shadow-xl shadow-blue-500/5 group-hover:shadow-2xl group-hover:shadow-blue-500/10 transition-all duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <button
-                    onClick={() => {
-                      if (bookmarks.includes(pageNum)) {
-                        removeBookmark(pageNum);
-                      } else {
-                        addBookmark(pageNum);
-                      }
-                    }}
-                    className={cn(
-                      "absolute top-4 right-4 p-2 rounded-full",
-                      "opacity-0 group-hover:opacity-100",
-                      "transition-all duration-300",
-                      "backdrop-blur-xl",
-                      bookmarks.includes(pageNum)
-                        ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                        : "bg-gray-900/90 text-blue-400 hover:text-blue-300"
-                    )}>
-                    <BookmarkPlus className="w-5 h-5" />
-                  </button>
                 </div>
               ))}
             </div>
@@ -741,9 +607,6 @@ const MagazineViewer = () => {
           </div>
         </div>
       </div>
-
-      {/* Modals */}
-      <BookmarksDialog />
 
       {/* Error Toast with Space Theme */}
       {errorMessage && (
