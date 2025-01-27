@@ -14,23 +14,11 @@ import {
   Circle,
   Moon,
   Sun,
+  Download,
 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 
 const MagazineViewer = () => {
   // State management with space theme defaults
@@ -422,6 +410,19 @@ const MagazineViewer = () => {
               onClick={() => goToSpread(1)}
               className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
               <Home className="w-4 h-4" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                window.open(
+                  "https://drive.google.com/file/d/1O7uP1r4uvUn9-Xp9wYqPqPa0iUfYImzq/view?usp=sharing",
+                  "_blank"
+                )
+              }
+              className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
+              <Download className="w-4 h-4" />
             </Button>
 
             <Progress
