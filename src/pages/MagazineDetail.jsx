@@ -9,6 +9,23 @@ const MagazineDetail = () => {
   const magazine = getMagazineById(id);
   const [showAllContents, setShowAllContents] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [stars, setStars] = useState([]);
+
+  // Generate subtle stars for background
+  useEffect(() => {
+    const generateStars = () => {
+      return Array.from({ length: 50 }, (_, index) => ({
+        id: index,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 1 + 0.5,
+        opacity: Math.random() * 0.3 + 0.1,
+        animationDelay: `${Math.random() * 8}s`,
+      }));
+    };
+
+    setStars(generateStars());
+  }, []);
 
   // Detect mobile screen size
   useEffect(() => {
@@ -21,6 +38,33 @@ const MagazineDetail = () => {
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // SpaceBackground component
+  const SpaceBackground = () => (
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      {/* Subtle gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950 to-black" />
+      
+      {/* Minimal stars */}
+      {stars.map((star) => (
+        <div
+          key={star.id}
+          className="absolute bg-white rounded-full animate-pulse"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            opacity: star.opacity,
+            animationDelay: star.animationDelay,
+          }}
+        />
+      ))}
+      
+      {/* Subtle radial gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/50" />
+    </div>
+  );
 
   if (!magazine) {
     return (
@@ -38,21 +82,25 @@ const MagazineDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Navigation */}
-      <nav className="relative z-20 p-6">
-        <div className="max-w-7xl mx-auto">
-          <Link to="/">
-            <Button 
-              variant="ghost" 
-              className="text-gray-400 hover:text-white hover:bg-gray-900 rounded-full px-4 py-2 font-light"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-          </Link>
-        </div>
-      </nav>
+    <div className="min-h-screen relative overflow-hidden bg-black">
+      <SpaceBackground />
+      
+      {/* Main Content */}
+      <div className="relative z-10">
+        {/* Navigation */}
+        <nav className="relative z-20 p-6">
+          <div className="max-w-7xl mx-auto">
+            <Link to="/">
+              <Button 
+                variant="ghost" 
+                className="text-gray-400 hover:text-white hover:bg-gray-900 rounded-full px-4 py-2 font-light"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+            </Link>
+          </div>
+        </nav>
 
       {/* Hero Section */}
       <section className="py-16 px-6">
@@ -67,8 +115,8 @@ const MagazineDetail = () => {
                   className="w-full h-auto rounded-2xl shadow-2xl"
                 />
                 {magazine.featured && (
-                  <div className="absolute -top-4 -right-4 bg-white text-black px-4 py-2 rounded-full text-sm font-medium">
-                    <Star className="w-4 h-4 inline mr-1" />
+                  <div className="absolute -top-3 -right-3 bg-white/10 backdrop-blur-md border border-white/20 text-white px-3 py-1.5 rounded-full text-xs font-light tracking-wide shadow-lg hover:bg-white/20 transition-all duration-300">
+                    <Star className="w-3 h-3 inline mr-1.5 fill-current" />
                     Featured
                   </div>
                 )}
@@ -335,6 +383,7 @@ const MagazineDetail = () => {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 };

@@ -54,6 +54,9 @@ export default {
 					'5': 'hsl(var(--chart-5))',
 				},
 			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+			},
 			animation: {
 				twinkle: "twinkle 3s ease-in-out infinite",
 				"shooting-star": "shooting-star 2s linear infinite",
