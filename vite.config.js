@@ -10,11 +10,15 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['pdfjs-dist']
+    include: ['react-pdf']
   },
   server: {
     fs: {
       allow: ['..']
     }
-  }
+  },
+  define: {
+    global: 'globalThis',
+  },
+  assetsInclude: ['**/*.pdf']
 })

@@ -134,3 +134,118 @@
 .animate-float-slow {
   animation: float-slow 8s ease-in-out infinite;
 }
+
+/* React-PDF Styles */
+.react-pdf__Document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.react-pdf__Page {
+  max-width: calc(100% - 2em);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  margin: 1em;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.react-pdf__Page__canvas {
+  border-radius: 8px;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.react-pdf__Page__textContent {
+  border-radius: 8px;
+}
+
+.react-pdf__Page__annotations {
+  border-radius: 8px;
+}
+
+/* Additional react-pdf support styles */
+.react-pdf__Page__annotations .annotationLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.2;
+  line-height: 1.0;
+}
+
+.react-pdf__Page__textContent .textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0;
+  line-height: 1.0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Hide PDF text layers completely */
+.react-pdf__Page__textContent,
+.react-pdf__Page__annotations {
+  display: none !important;
+}
+
+/* Ensure PDF canvas is properly displayed */
+.react-pdf__Page__canvas {
+  display: block;
+}
+
+/* Remove all gaps between PDF pages */
+.react-pdf__Page {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Ensure dual-page container has no gaps */
+.react-pdf__Document {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove any default spacing from the flex container */
+.flex .react-pdf__Page {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure canvas respects border radius */
+.react-pdf__Page canvas {
+  border-radius: inherit;
+}
+
+/* Handle dual-page specific styling */
+.react-pdf__Page canvas {
+  display: block;
+  border-radius: inherit;
+}
+
+/* Override any inherited border radius for dual pages */
+.flex .react-pdf__Page canvas {
+  border-radius: inherit !important;
+}
+
+/* Ensure the Document container doesn't interfere */
+.react-pdf__Document > div {
+  border-radius: inherit;
+}
+
+/* Force specific border radius for dual-page canvases */
+.flex .react-pdf__Page:first-child canvas {
+  border-radius: 8px 0px 0px 8px !important;
+}
+
+.flex .react-pdf__Page:last-child canvas {
+  border-radius: 0px 8px 8px 0px !important;
+}
