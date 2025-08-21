@@ -335,7 +335,7 @@ const MagazineDetail = () => {
                 key={member.id}
                 className="text-center space-y-6 group"
               >
-                <div className="w-32 h-32 rounded-full overflow-hidden mx-auto shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                <div className="w-32 h-32 rounded-xl overflow-hidden mx-auto shadow-2xl group-hover:scale-105 transition-transform duration-500">
                   <img 
                     src={member.avatar} 
                     alt={member.name}

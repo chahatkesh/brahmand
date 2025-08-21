@@ -16,7 +16,7 @@ export const MAGAZINES = {
     publisher: "APOGEE - Space Club, NIT Jalandhar",
     issn: "2581-1234",
     readTime: "45 minutes",
-    downloadSize: "12.5 MB",
+    downloadSize: "5.7 MB",
     tableOfContents: [
       "Editorial",
       "Faculty Insights", 
@@ -111,7 +111,7 @@ export const MAGAZINES = {
     language: "English", 
     publisher: "APOGEE - Space Club, NIT Jalandhar",
     readTime: "60 minutes",
-    downloadSize: "18.2 MB",
+    downloadSize: "10.2 MB",
     tableOfContents: [
   "Editorial",
   "Faculty Corner",
@@ -172,39 +172,57 @@ export const MAGAZINES = {
     featuredVisionaries: [
       {
         name: "Dr. Harleen Dahiya",
-        title: "Associate Professor",
+        title: "Coordinator of APOGEE Space Club NIT Jalandhar",
         avatar: "/team/team_harleen.png"
       },
       {
         name: "Dr. Sateesh Kumar Awasthi", 
-        title: "Assistant Professor (Grade-I)",
+        title: "Coordinator of APOGEE Space Club NIT Jalandhar",
         avatar: "/team/team_sateesh.png"
       },
       {
         name: "Dr. Joseph Anand Vaz",
-        title: "Professor",
+        title: "Coordinator ISRO Space Technology Incubation Centre (S-TIC) at NIT Jalandhar",
         avatar: "/team/team_joseph.png"
       }
     ],
     team: [
-      {
-        id: 1,
-        name: "Samridhi Saini",
-        role: "Editor",
-        avatar: "/team/team_samridhi.png",
-      },
-      {
-        id: 2,
-        name: "Janvi Khurana",
-        role: "Designer",
-        avatar: "/team/team_janvi.png",
-      },
-      {
-        id: 3,
-        name: "Chahat Kesharwani",
-        role: "Designer",
-        avatar: "/team/team_chahat.png",
-      },
+  {
+    id: 1,
+    name: "Samridhi Saini",
+    role: "Editor-in-Chief",
+    avatar: "/team/team_samridhi.png",
+  },
+  {
+    id: 2,
+    name: "Janvi Khurana",
+    role: "Creative Director",
+    avatar: "/team/team_janvi.png",
+  },
+  {
+    id: 3,
+    name: "Chahat Kesharwani",
+    role: "Layout & Visual Designer",
+    avatar: "/team/team_chahat.png",
+  },
+  {
+    id: 4,
+    name: "Ayush Gupta",
+    role: "Typography & Styling Designer",
+    avatar: "/team/team_ayush.png",
+  },
+  {
+    id: 5,
+    name: "Siya",
+    role: "Content & Visual Designer",
+    avatar: "/team/team_siya.png",
+  },
+  {
+    id: 6,
+    name: "Kaushik",
+    role: "Graphic Illustrator",
+    avatar: "/team/team_kaushik.png",
+  },
     ]
   }
 };
