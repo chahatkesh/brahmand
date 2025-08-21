@@ -317,41 +317,159 @@ const MagazineDetail = () => {
         </section>
       )}
 
-      {/* Team Section */}
-      <section className="py-20 px-6">
+      {/* Team Section - Apple-inspired Design */}
+      <section className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-light text-white mb-4">
-              Creative Team
+          {/* Section Header */}
+          <div className="text-center mb-32">
+            <h2 className="text-4xl md:text-5xl font-light text-white mb-8 tracking-tight leading-none">
+              The team who made it possible.
             </h2>
-            <p className="text-gray-400 text-lg font-light">
-              The creative minds behind this issue
+            <p className="text-xl md:text-2xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed">
+              Passionate creators united by a shared vision to bring you extraordinary stories from the cosmos.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-16">
-            {magazine.team && magazine.team.map((member) => (
-              <div 
-                key={member.id}
-                className="text-center space-y-6 group"
-              >
-                <div className="w-32 h-32 rounded-xl overflow-hidden mx-auto shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                  <img 
-                    src={member.avatar} 
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
+          {/* Leadership Team */}
+          {magazine.team && magazine.team.filter(member => member.islead).length > 0 && (
+            <div className="mb-32">
+              <div className="grid md:grid-cols-2 gap-20 max-w-5xl mx-auto">
+                {magazine.team
+                  .filter(member => member.islead)
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((member) => {
+                    // Use actual images for leads only
+                    const leadImages = {
+                      'Samridhi Saini': '/team/team_samridhi.png',
+                      'Janvi Khurana': '/team/team_janvi.png'
+                    };
+                    
+                    return (
+                      <div 
+                        key={member.id}
+                        className="text-center group"
+                      >
+                        {/* Profile Image for Leaders */}
+                        <div className="relative mb-8 mx-auto w-32 h-32">
+                          {leadImages[member.name] ? (
+                            <div className="relative">
+                              <img 
+                                src={leadImages[member.name]} 
+                                alt={member.name}
+                                className="w-full h-full object-cover rounded-full ring-1 ring-white/10 group-hover:ring-blue-400/30 transition-all duration-500 shadow-2xl"
+                              />
+                              <div className="absolute inset-0 rounded-full bg-gradient-to-t from-black/20 to-transparent group-hover:from-blue-500/10 transition-all duration-500"></div>
+                            </div>
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-full flex items-center justify-center ring-1 ring-white/10 group-hover:ring-blue-400/30 transition-all duration-500 shadow-2xl">
+                              <span className="text-white font-light text-3xl">
+                                {member.name.split(' ').map(n => n[0]).join('')}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {/* Leadership indicator */}
+                          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 shadow-lg">
+                              <Star className="w-4 h-4 text-black fill-current" />
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Member Info */}
+                        <div className="space-y-4">
+                          <h4 className="text-3xl font-light text-white group-hover:text-blue-300 transition-colors duration-300">
+                            {member.name}
+                          </h4>
+                          <p className="text-blue-400 text-lg font-medium tracking-wide">
+                            {member.role}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+
+          {/* Team Members */}
+          {magazine.team && magazine.team.filter(member => !member.islead).length > 0 && (
+            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {magazine.team
+                  .filter(member => !member.islead)
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((member) => {
+                    return (
+                      <div 
+                        key={member.id}
+                        className="group"
+                      >
+                        {/* Card Container */}
+                        <div className="bg-white/[0.02] backdrop-blur-xl rounded-3xl p-8 border border-white/[0.05] hover:border-white/10 hover:bg-white/[0.04] transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:transform hover:scale-[1.02]">
+                          {/* Profile Avatar */}
+                          <div className="relative mb-6 mx-auto w-20 h-20">
+                            <div className="w-full h-full bg-gradient-to-br from-gray-500 to-gray-700 rounded-full flex items-center justify-center ring-1 ring-white/10 group-hover:ring-purple-400/30 transition-all duration-300">
+                              <span className="text-white font-light text-lg">
+                                {member.name.split(' ').map(n => n[0]).join('')}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {/* Member Info */}
+                          <div className="text-center">
+                            <h4 className="text-lg font-medium text-white group-hover:text-purple-300 transition-colors duration-300 mb-2">
+                              {member.name}
+                            </h4>
+                            <p className="text-gray-400 text-sm font-medium">
+                              {member.role}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+          
+          {/* Team Values Section */}
+          <div className="mt-32 bg-gradient-to-br from-white/[0.02] to-white/[0.01] backdrop-blur-xl rounded-[2rem] border border-white/[0.05] p-16 text-center">
+            <h3 className="text-3xl md:text-4xl font-light text-white mb-8 tracking-tight">
+              Crafted with precision and passion
+            </h3>
+            <p className="text-gray-300 text-lg md:text-xl font-light max-w-4xl mx-auto leading-relaxed mb-12">
+              Every element of this magazine reflects our commitment to excellence and our deep appreciation 
+              for the wonders of space exploration. Together, we create more than content — we inspire curiosity.
+            </p>
+            
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16">
+              <div className="group">
+                <div className="text-4xl md:text-5xl font-ultralight text-blue-400 mb-3 group-hover:text-blue-300 transition-colors duration-300">
+                  {magazine.team ? magazine.team.length : 0}
                 </div>
-                <div className="space-y-3">
-                  <h3 className="text-2xl font-light text-white">
-                    {member.name}
-                  </h3>
-                  <p className="text-gray-400 font-medium">
-                    {member.role}
-                  </p>
+                <div className="text-gray-400 text-sm font-medium uppercase tracking-wider">
+                  Creative Minds
                 </div>
               </div>
-            ))}
+              <div className="group">
+                <div className="text-4xl md:text-5xl font-ultralight text-purple-400 mb-3 group-hover:text-purple-300 transition-colors duration-300">
+                  {magazine.pages}
+                </div>
+                <div className="text-gray-400 text-sm font-medium uppercase tracking-wider">
+                  Thoughtfully Designed
+                </div>
+              </div>
+              <div className="group">
+                <div className="text-4xl md:text-5xl font-ultralight text-green-400 mb-3 group-hover:text-green-300 transition-colors duration-300">
+                  {magazine.readTime}
+                </div>
+                <div className="text-gray-400 text-sm font-medium uppercase tracking-wider">
+                  Immersive Experience
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

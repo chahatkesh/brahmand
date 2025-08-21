@@ -81,19 +81,16 @@ export const MAGAZINES = {
         id: 1,
         name: "Samridhi Saini",
         role: "Editor",
-        avatar: "/team/team_samridhi.png",
       },
       {
         id: 2,
         name: "Janvi Khurana",
         role: "Designer",
-        avatar: "/team/team_janvi.png",
       },
       {
         id: 3,
         name: "Chahat Kesharwani",
         role: "Designer",
-        avatar: "/team/team_chahat.png",
       },
     ]
   },
@@ -110,7 +107,7 @@ export const MAGAZINES = {
     category: "Space Policy & Innovation",
     language: "English", 
     publisher: "APOGEE - Space Club, NIT Jalandhar",
-    readTime: "60 minutes",
+    readTime: "80 minutes",
     downloadSize: "10.2 MB",
     tableOfContents: [
   "Editorial",
@@ -191,38 +188,119 @@ export const MAGAZINES = {
     id: 1,
     name: "Samridhi Saini",
     role: "Editor-in-Chief",
-    avatar: "/team/team_samridhi.png",
+    islead: true
   },
   {
     id: 2,
     name: "Janvi Khurana",
     role: "Creative Director",
-    avatar: "/team/team_janvi.png",
+    islead: true
   },
   {
     id: 3,
     name: "Chahat Kesharwani",
-    role: "Layout & Visual Designer",
-    avatar: "/team/team_chahat.png",
+    role: "Designer",
   },
   {
     id: 4,
     name: "Ayush Gupta",
-    role: "Typography & Styling Designer",
-    avatar: "/team/team_ayush.png",
+    role: "Designer",
   },
   {
     id: 5,
     name: "Siya",
-    role: "Content & Visual Designer",
-    avatar: "/team/team_siya.png",
+    role: "Designer",
   },
   {
     id: 6,
     name: "Kaushik",
-    role: "Graphic Illustrator",
-    avatar: "/team/team_kaushik.png",
+    role: "Designer",
   },
+  {
+    id: 7,
+    name: "Harmanpreet Kaur",
+    role: "Editor"
+  },
+  {
+    id: 8,
+    name: "Pradeep",
+    role: "Editor"
+  },
+  {
+    id: 9,
+    name: "Tanusha",
+    role: "Editor"
+  },
+  {
+    id: 10,
+    name: "Jasjeet Singh",
+    role: "Editor"
+  },
+  {
+    id: 11,
+    name: "Anmol",
+    role: "Editor"
+  },
+  {
+    id: 12,
+    name: "Navjot",
+    role: "Editor"
+  },
+  {
+    id: 13,
+    name: "Gagan",
+    role: "Editor"
+  },
+  {
+    id: 14,
+    name: "Tanweer",
+    role: "Editor"
+  },
+  {
+    id: 15,
+    name: "Ayush",
+    role: "Editor"
+  },
+  {
+    id: 16,
+    name: "Harsimandeep",
+    role: "Editor"
+  },
+  {
+    id: 17,
+    name: "Kunal",
+    role: "Editor"
+  },
+  {
+    id: 18,
+    name: "Divya",
+    role: "Editor"
+  },
+  {
+    id: 19,
+    name: "Vatsal",
+    role: "Editor"
+  },
+  {
+    id: 20,
+    name: "Aditya",
+    role: "Editor"
+  },
+  {
+    id: 21,
+    name: "Anoop",
+    role: "Editor"
+  },
+  {
+    id: 22,
+    name: "Barleen",
+    role: "Editor"
+  },
+  {
+    id: 23,
+    name: "Krish",
+    role: "Editor"
+  }
     ]
   }
 };
