@@ -1,11 +1,26 @@
 import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { getMagazineById } from "../data/magazineData";
 import { Button } from "../components/ui/button";
-import { ArrowLeft, Clock, Download, Calendar, FileText, Star, Mail } from "lucide-react";
+import { ArrowLeft, Clock, Download, Calendar, FileText, Star, Mail, ChevronDown, ChevronUp } from "lucide-react";
 
 const MagazineDetail = () => {
   const { id } = useParams();
   const magazine = getMagazineById(id);
+  const [showAllContents, setShowAllContents] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   if (!magazine) {
     return (
@@ -137,7 +152,9 @@ const MagazineDetail = () => {
           <div className="max-w-5xl mx-auto">
             <div className="bg-gray-900/30 backdrop-blur-xl rounded-2xl border border-gray-800 p-6">
               <div className="grid md:grid-cols-3 gap-4">
-                {magazine.tableOfContents.map((item, index) => (
+                {magazine.tableOfContents
+                  .slice(0, showAllContents || !isMobile ? magazine.tableOfContents.length : 6)
+                  .map((item, index) => (
                   <div 
                     key={index}
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 transition-colors duration-300"
@@ -149,6 +166,31 @@ const MagazineDetail = () => {
                   </div>
                 ))}
               </div>
+              
+              {/* Show All/Show Less button for mobile */}
+              {isMobile && magazine.tableOfContents.length > 6 && (
+                <div className="mt-6 text-center">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowAllContents(!showAllContents)}
+                    className="text-gray-400 hover:text-white hover:bg-gray-800/30 rounded-full px-6 py-3 font-light transition-all duration-300"
+                  >
+                    <span className="flex items-center gap-2">
+                      {showAllContents ? (
+                        <>
+                          Show Less
+                          <ChevronUp className="w-4 h-4" />
+                        </>
+                      ) : (
+                        <>
+                          Show All ({magazine.tableOfContents.length - 6} more)
+                          <ChevronDown className="w-4 h-4" />
+                        </>
+                      )}
+                    </span>
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
