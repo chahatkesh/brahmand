@@ -79,3 +79,58 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.3);
 }
+
+/* Space Theme Animations */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes shooting-star {
+  0% {
+    transform: translateX(-100px) translateY(0px);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(300px) translateY(-150px);
+    opacity: 0;
+  }
+}
+
+@keyframes nebula {
+  0%, 100% { transform: translateX(-5px) rotate(0deg); }
+  50% { transform: translateX(5px) rotate(2deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+.animate-twinkle {
+  animation: twinkle var(--duration, 3s) ease-in-out infinite;
+}
+
+.animate-shooting-star {
+  animation: shooting-star var(--duration, 2s) ease-out infinite;
+}
+
+.animate-nebula {
+  animation: nebula 20s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
