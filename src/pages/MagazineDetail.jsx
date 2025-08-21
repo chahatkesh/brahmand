@@ -356,24 +356,13 @@ const MagazineDetail = () => {
                               <img 
                                 src={leadImages[member.name]} 
                                 alt={member.name}
-                                className="w-full h-full object-cover rounded-full ring-1 ring-white/10 group-hover:ring-blue-400/30 transition-all duration-500 shadow-2xl"
+                                className="w-full h-full object-cover rounded-xl ring-1 ring-white/10 group-hover:ring-blue-400/30 transition-all duration-500 shadow-2xl"
                               />
-                              <div className="absolute inset-0 rounded-full bg-gradient-to-t from-black/20 to-transparent group-hover:from-blue-500/10 transition-all duration-500"></div>
                             </div>
                           ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-full flex items-center justify-center ring-1 ring-white/10 group-hover:ring-blue-400/30 transition-all duration-500 shadow-2xl">
-                              <span className="text-white font-light text-3xl">
-                                {member.name.split(' ').map(n => n[0]).join('')}
-                              </span>
-                            </div>
+                            <></>
                           )}
                           
-                          {/* Leadership indicator */}
-                          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 shadow-lg">
-                              <Star className="w-4 h-4 text-black fill-current" />
-                            </div>
-                          </div>
                         </div>
                         
                         {/* Member Info */}
