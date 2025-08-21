@@ -4,7 +4,6 @@ import {
   Download,
   Minimize,
   Maximize2,
-  Home,
   ZoomIn,
   ZoomOut,
   RotateCw,
@@ -170,7 +169,7 @@ const Magazine = () => {
     // Calculate and set optimal scale
     const newScale = calculateOptimalScale();
     setScale(newScale);
-  }, [viewMode, pageNumber]);
+  }, [viewMode]);
 
   const onPageLoadError = (error) => {
     console.error('Page loading error:', error);
@@ -420,21 +419,16 @@ const Magazine = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate(-1)}
                   className="text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-full p-2 transition-all duration-300"
-                  title="Back to Home"
+                  title="Go Back"
                 >
-                  <Home className="w-5 h-5" />
+                  <ChevronLeft className="w-5 h-5" />
                 </Button>
                 <div>
                   <h1 className="text-xl font-light text-white">
                     {currentMagazine?.title || 'Magazine'}
                   </h1>
-                  {currentMagazine?.subtitle && (
-                    <p className="hidden md:block text-sm font-light text-gray-400">
-                      {currentMagazine.subtitle}
-                    </p>
-                  )}
                 </div>
               </div>
 
