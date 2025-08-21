@@ -223,7 +223,7 @@ export const MAGAZINES = {
   },
   {
     id: 8,
-    name: "Pradeep",
+    name: "Pradeep Awasthi",
     role: "Editor"
   },
   {
@@ -263,7 +263,7 @@ export const MAGAZINES = {
   },
   {
     id: 16,
-    name: "Harsimandeep",
+    name: "Harmandeep Singh",
     role: "Editor"
   },
   {
@@ -278,7 +278,7 @@ export const MAGAZINES = {
   },
   {
     id: 19,
-    name: "Vatsal",
+    name: "Vatsal Khanna",
     role: "Editor"
   },
   {
@@ -298,7 +298,7 @@ export const MAGAZINES = {
   },
   {
     id: 23,
-    name: "Krish",
+    name: "Krish Baghla",
     role: "Editor"
   }
     ]
