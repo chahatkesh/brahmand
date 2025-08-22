@@ -317,7 +317,7 @@ const MagazineDetail = () => {
         </section>
       )}
 
-      {/* Team Section - Apple-inspired Design */}
+      {/* Team Section - Names and Roles Only */}
       <section className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
@@ -338,33 +338,11 @@ const MagazineDetail = () => {
                   .filter(member => member.islead)
                   .sort((a, b) => a.name.localeCompare(b.name))
                   .map((member) => {
-                    // Use actual images for leads only
-                    const leadImages = {
-                      'Samridhi Saini': '/team/team_samridhi.png',
-                      'Janvi Khurana': '/team/team_janvi.png'
-                    };
-                    
                     return (
                       <div 
                         key={member.id}
                         className="text-center group"
                       >
-                        {/* Profile Image for Leaders */}
-                        <div className="relative mb-8 mx-auto w-32 h-32">
-                          {leadImages[member.name] ? (
-                            <div className="relative">
-                              <img 
-                                src={leadImages[member.name]} 
-                                alt={member.name}
-                                className="w-full h-full object-cover rounded-xl ring-1 ring-white/10 group-hover:ring-blue-400/30 transition-all duration-500 shadow-2xl"
-                              />
-                            </div>
-                          ) : (
-                            <></>
-                          )}
-                          
-                        </div>
-                        
                         {/* Member Info */}
                         <div className="space-y-4">
                           <h4 className="text-3xl font-light text-white group-hover:text-blue-300 transition-colors duration-300">
@@ -396,15 +374,6 @@ const MagazineDetail = () => {
                       >
                         {/* Card Container */}
                         <div className="bg-white/[0.02] backdrop-blur-xl rounded-3xl p-8 border border-white/[0.05] hover:border-white/10 hover:bg-white/[0.04] transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:transform hover:scale-[1.02]">
-                          {/* Profile Avatar */}
-                          <div className="relative mb-6 mx-auto w-20 h-20">
-                            <div className="w-full h-full bg-gradient-to-br from-gray-500 to-gray-700 rounded-full flex items-center justify-center ring-1 ring-white/10 group-hover:ring-purple-400/30 transition-all duration-300">
-                              <span className="text-white font-light text-lg">
-                                {member.name.split(' ').map(n => n[0]).join('')}
-                              </span>
-                            </div>
-                          </div>
-                          
                           {/* Member Info */}
                           <div className="text-center">
                             <h4 className="text-lg font-medium text-white group-hover:text-purple-300 transition-colors duration-300 mb-2">
