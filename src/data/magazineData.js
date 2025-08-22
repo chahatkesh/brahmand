@@ -204,7 +204,7 @@ export const MAGAZINES = {
   {
     id: 4,
     name: "Ayush Gupta",
-    role: "Designer",
+    role: "Editor & Designer",
   },
   {
     id: 5,
@@ -258,7 +258,7 @@ export const MAGAZINES = {
   },
   {
     id: 15,
-    name: "Ayush",
+    name: "Krish Baghla",
     role: "Editor"
   },
   {
@@ -296,11 +296,6 @@ export const MAGAZINES = {
     name: "Barleen",
     role: "Editor"
   },
-  {
-    id: 23,
-    name: "Krish Baghla",
-    role: "Editor"
-  }
     ]
   }
 };
