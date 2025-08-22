@@ -253,7 +253,7 @@ export const MAGAZINES = {
   },
   {
     id: 14,
-    name: "Tanweer",
+    name: "Tanvir Singh",
     role: "Editor"
   },
   {
