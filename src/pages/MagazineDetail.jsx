@@ -321,15 +321,14 @@ const MagazineDetail = () => {
       <section className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-32">
-            <h2 className="text-4xl md:text-5xl font-light text-white mb-8 tracking-tight leading-none">
-              The team who made it possible.
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed">
-              Passionate creators united by a shared vision to bring you extraordinary stories from the cosmos.
-            </p>
-          </div>
-          
+          <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-light text-white mb-4">
+                The team who made it possible.
+              </h2>
+              <p className="text-gray-400 text-lg font-light">
+                Passionate creators united by a shared vision to bring you extraordinary stories from the cosmos.
+              </p>
+            </div>
           {/* Leadership Team */}
           {magazine.team && magazine.team.filter(member => member.islead).length > 0 && (
             <div className="mb-32">
@@ -344,7 +343,7 @@ const MagazineDetail = () => {
                         className="text-center group"
                       >
                         {/* Member Info */}
-                        <div className="space-y-4">
+                        <div className="space-y-4 bg-white/[0.02] backdrop-blur-xl rounded-3xl p-8 border border-white/[0.05] hover:border-white/10 hover:bg-white/[0.04] transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:transform hover:scale-[1.02">
                           <h4 className="text-3xl font-light text-white group-hover:text-blue-300 transition-colors duration-300">
                             {member.name}
                           </h4>
