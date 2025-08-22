@@ -331,7 +331,7 @@ const MagazineDetail = () => {
             </div>
           {/* Leadership Team */}
           {magazine.team && magazine.team.filter(member => member.islead).length > 0 && (
-            <div className="mb-32">
+            <div className="mb-20">
               <div className="grid md:grid-cols-2 gap-20 max-w-5xl mx-auto">
                 {magazine.team
                   .filter(member => member.islead)
@@ -361,34 +361,77 @@ const MagazineDetail = () => {
           {/* Team Members */}
           {magazine.team && magazine.team.filter(member => !member.islead).length > 0 && (
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {magazine.team
-                  .filter(member => !member.islead)
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((member) => {
-                    return (
-                      <div 
-                        key={member.id}
-                        className="group"
-                      >
-                        {/* Card Container */}
-                        <div className="bg-white/[0.02] backdrop-blur-xl rounded-3xl p-8 border border-white/[0.05] hover:border-white/10 hover:bg-white/[0.04] transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:transform hover:scale-[1.02]">
-                          {/* Member Info */}
-                          <div className="text-center">
-                            <h4 className="text-lg font-medium text-white group-hover:text-purple-300 transition-colors duration-300 mb-2">
-                              {member.name}
-                            </h4>
-                            <p className="text-gray-400 text-sm font-medium">
-                              {member.role}
-                            </p>
+              {/* Editors Section */}
+              {magazine.team.filter(member => !member.islead && member.role === "Editor").length > 0 && (
+                <div className="mb-16">
+                  <div className="text-center mb-12">
+                    <h3 className="text-2xl font-light text-white/80 tracking-wide">
+                      Editorial
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {magazine.team
+                      .filter(member => !member.islead && member.role === "Editor")
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((member) => {
+                        return (
+                          <div 
+                            key={member.id}
+                            className="group"
+                          >
+                            <div className="bg-white/[0.015] backdrop-blur-xl rounded-2xl p-6 border border-white/[0.03] hover:border-green-400/20 hover:bg-white/[0.025] transition-all duration-500 hover:shadow-lg hover:shadow-green-500/5">
+                              <div className="text-center">
+                                <h4 className="text-base font-medium text-white group-hover:text-green-300 transition-colors duration-300 mb-1">
+                                  {member.name}
+                                </h4>
+                                <p className="text-green-400/70 text-xs font-medium tracking-wide uppercase">
+                                  {member.role}
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
+
+          {/* Designers Section */}
+              {magazine.team.filter(member => !member.islead && member.role === "Designer").length > 0 && (
+                <div className="">
+                  <div className="text-center mb-12">
+                    <h3 className="text-2xl font-light text-white/80 tracking-wide">
+                      Design
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {magazine.team
+                      .filter(member => !member.islead && member.role === "Designer")
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((member) => {
+                        return (
+                          <div 
+                            key={member.id}
+                            className="group"
+                          >
+                            <div className="bg-white/[0.015] backdrop-blur-xl rounded-2xl p-6 border border-white/[0.03] hover:border-blue-400/20 hover:bg-white/[0.025] transition-all duration-500 hover:shadow-lg hover:shadow-blue-500/5">
+                              <div className="text-center">
+                                <h4 className="text-base font-medium text-white group-hover:text-blue-300 transition-colors duration-300 mb-1">
+                                  {member.name}
+                                </h4>
+                                <p className="text-blue-400/70 text-xs font-medium tracking-wide uppercase">
+                                  {member.role}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
           
           {/* Team Values Section */}
           <div className="mt-32 bg-gradient-to-br from-white/[0.02] to-white/[0.01] backdrop-blur-xl rounded-[2rem] border border-white/[0.05] p-16 text-center">

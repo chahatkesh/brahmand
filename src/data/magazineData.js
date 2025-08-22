@@ -204,7 +204,7 @@ export const MAGAZINES = {
   {
     id: 4,
     name: "Ayush Gupta",
-    role: "Editor & Designer",
+    role: "Designer",
   },
   {
     id: 5,
@@ -218,7 +218,7 @@ export const MAGAZINES = {
   },
   {
     id: 7,
-    name: "Harmanpreet Kaur",
+    name: "Harmanjeet Kaur",
     role: "Editor"
   },
   {
@@ -228,7 +228,7 @@ export const MAGAZINES = {
   },
   {
     id: 9,
-    name: "Tanusha",
+    name: "Tanisha",
     role: "Editor"
   },
   {
@@ -258,7 +258,7 @@ export const MAGAZINES = {
   },
   {
     id: 15,
-    name: "Krish Baghla",
+    name: "Krrish Baghla",
     role: "Editor"
   },
   {
@@ -293,7 +293,7 @@ export const MAGAZINES = {
   },
   {
     id: 22,
-    name: "Barleen",
+    name: "Barleen Kaur Randhawa",
     role: "Editor"
   },
     ]
