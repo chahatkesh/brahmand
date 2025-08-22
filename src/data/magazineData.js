@@ -208,12 +208,12 @@ export const MAGAZINES = {
   },
   {
     id: 5,
-    name: "Siya",
+    name: "Siya Gurjar",
     role: "Designer",
   },
   {
     id: 6,
-    name: "Kaushik",
+    name: "Kaushik Kumar",
     role: "Designer",
   },
   {
@@ -238,12 +238,12 @@ export const MAGAZINES = {
   },
   {
     id: 11,
-    name: "Anmol",
+    name: "Anmol Dhiman",
     role: "Editor"
   },
   {
     id: 12,
-    name: "Navjot",
+    name: "Navjot Kaur",
     role: "Editor"
   },
   {
@@ -253,7 +253,7 @@ export const MAGAZINES = {
   },
   {
     id: 14,
-    name: "Tanvir Singh",
+    name: "Tanveer Singh Saini",
     role: "Editor"
   },
   {
@@ -268,12 +268,12 @@ export const MAGAZINES = {
   },
   {
     id: 17,
-    name: "Kunal",
+    name: "Kunal Kashyap",
     role: "Editor"
   },
   {
     id: 18,
-    name: "Divya",
+    name: "Divya Kumari",
     role: "Editor"
   },
   {
@@ -283,12 +283,12 @@ export const MAGAZINES = {
   },
   {
     id: 20,
-    name: "Aditya",
+    name: "Aditya Mahajan",
     role: "Editor"
   },
   {
     id: 21,
-    name: "Anoop",
+    name: "Anoop Tripathi",
     role: "Editor"
   },
   {
